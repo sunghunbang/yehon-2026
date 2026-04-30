@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 예혼전 · 드로잉전</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0c0c0c;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: #7a6030;
+  --white: #f0ece4;
+  --muted: #888;
+  --line: rgba(201,168,76,0.25);
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.page { position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px;
+  border-bottom: 0.5px solid var(--line);
+}
+.school-name {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.header-year {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 64px 40px 48px;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--gold-dim), transparent);
+}
+
+.title-sub {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  animation: fadeUp 0.8s ease both;
+}
+.title-main {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  animation: fadeUp 0.8s 0.15s ease both;
+}
+.title-main em {
+  font-style: normal;
+  color: var(--gold);
+}
+.title-divider {
+  color: var(--gold-dim);
+  margin: 0 12px;
+  font-weight: 200;
+}
+.title-desc {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  font-weight: 300;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+/* ── COUNTDOWN SECTION ── */
+.countdowns {
+  padding: 72px 40px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* 상단 - 작품마감일 (더 크고 강조) */
+.cd-top {
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+  padding: 48px 40px;
+  border: 1.5px solid #39ff6a;
+  box-shadow: 0 0 16px rgba(57,255,106,0.25), inset 0 0 24px rgba(57,255,106,0.04);
+  border-radius: 2px;
+  background: rgba(57,255,106,0.03);
+  position: relative;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.cd-top::before {
+  content: '작품 마감';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg);
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: #39ff6a;
+  text-shadow: 0 0 12px #39ff6a, 0 0 28px rgba(57,255,106,0.5);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cd-date-label-top {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  margin-bottom: 12px;
+}
+.cd-date-top {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 300;
+  color: var(--gold-light);
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+}
+.cd-date-top span {
+  font-size: 14px;
+  color: var(--gold-dim);
+  margin-left: 4px;
+}
+
+.cd-numbers-top {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: flex-end;
+}
+.cd-unit-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.cd-num-top {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(48px, 10vw, 88px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  min-width: 2ch;
+  text-align: center;
+}
+#t-d {
+  color: #39ff6a;
+  text-shadow: 0 0 18px #39ff6a, 0 0 40px rgba(57,255,106,0.4);
+}
+#b-d {
+  color: #bf5fff;
+  text-shadow: 0 0 18px #bf5fff, 0 0 40px rgba(191,95,255,0.4);
+}
+.cd-label-top {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.cd-sep-top {
+  font-size: clamp(36px, 7vw, 64px);
+  color: var(--gold-dim);
+  line-height: 1;
+  padding-bottom: 18px;
+  font-weight: 200;
+}
+
+.cd-finished-top {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 24px;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+}
+
+/* 연결선 */
+.cd-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 4px;
+}
+.cd-connector-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+}
+.cd-connector-line {
+  width: 0.5px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--gold-dim), rgba(201,168,76,0.1));
+}
+
+/* 하단 - 오픈식 */
+.cd-bottom {
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+  padding: 36px 40px;
+  border: 0.5px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 2px 2px;
+  background: rgba(255,255,255,0.01);
+  animation: fadeUp 0.8s 0.55s ease both;
+}
+
+.cd-event-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cd-date-bottom {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 0.06em;
+  margin-bottom: 24px;
+}
+.cd-date-bottom span {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.cd-numbers-bot {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  align-items: flex-end;
+}
+.cd-unit-bot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.cd-num-bot {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(28px, 6vw, 52px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+  min-width: 2ch;
+  text-align: center;
+  opacity: 0.85;
+}
+.cd-label-bot {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.cd-sep-bot {
+  font-size: clamp(22px, 4.5vw, 40px);
+  color: var(--gold-dim);
+  line-height: 1;
+  padding-bottom: 14px;
+  font-weight: 200;
+  opacity: 0.5;
+}
+
+.cd-finished-bot {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 0.5px solid var(--line);
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+}
+.footer-left {
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.14em;
+}
+.footer-right {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 500px) {
+  header, footer { padding: 20px; }
+  .hero { padding: 48px 20px 40px; }
+  .countdowns { padding: 48px 20px 40px; }
+  .cd-top, .cd-bottom { padding: 32px 20px; }
+}
+
+/* ── SCHEDULE ── */
+.schedule {
+  padding: 0 40px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.schedule-inner {
+  width: 100%;
+  max-width: 640px;
+}
+.schedule-title {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sch-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: stretch;
+  animation: fadeUp 0.7s ease both;
+}
+.sch-item:nth-child(1){animation-delay:0.5s}
+.sch-item:nth-child(2){animation-delay:0.62s}
+.sch-item:nth-child(3){animation-delay:0.74s}
+.sch-item:nth-child(4){animation-delay:0.86s}
+
+.sch-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 16px 20px 16px 0;
+  border-right: 0.5px solid var(--line);
+  gap: 3px;
+}
+.sch-date {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--gold-light);
+  white-space: nowrap;
+}
+.sch-dow {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.sch-right {
+  padding: 16px 0 16px 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.sch-right::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 0.5px solid var(--gold);
+  background: var(--bg);
+}
+.sch-item.highlight .sch-right::before {
+  background: #bf5fff;
+  border-color: #bf5fff;
+  box-shadow: 0 0 10px #bf5fff, 0 0 22px rgba(191,95,255,0.5);
+}
+.sch-item.highlight-yellow .sch-right::before {
+  background: #39ff6a;
+  border-color: #39ff6a;
+  box-shadow: 0 0 10px #39ff6a, 0 0 22px rgba(57,255,106,0.5);
+}
+.sch-label {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+.sch-item.highlight .sch-date {
+  color: #bf5fff;
+  font-size: 20px;
+  text-shadow: 0 0 12px #bf5fff, 0 0 28px rgba(191,95,255,0.5);
+}
+.sch-item.highlight .sch-label {
+  color: #bf5fff;
+  font-size: 16px;
+  font-weight: 400;
+  text-shadow: 0 0 10px rgba(191,95,255,0.4);
+}
+.sch-item.highlight-yellow .sch-date {
+  color: #39ff6a;
+  font-size: 20px;
+  text-shadow: 0 0 12px #39ff6a, 0 0 28px rgba(57,255,106,0.5);
+}
+.sch-item.highlight-yellow .sch-label {
+  color: #39ff6a;
+  font-size: 16px;
+  font-weight: 400;
+  text-shadow: 0 0 10px rgba(57,255,106,0.4);
+}
+
+@media (max-width: 500px) {
+  .schedule { padding: 0 20px 48px; }
+  .sch-left { padding-right: 14px; }
+  .sch-right { padding-left: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <span class="school-name">충남예술고등학교 · 미술과</span>
+  <span class="header-year">2026</span>
+</header>
+
+<section class="hero">
+  <div class="title-sub">1·2학년 예술제 일정 안내</div>
+  <h1 class="title-main">
+    예<em>혼</em>전 <small style="font-size:0.55em;color:var(--gold-dim);">29기</small>
+    <span class="title-divider">·</span>
+    드로잉전 <small style="font-size:0.55em;color:var(--gold-dim);">30기</small>
+  </h1>
+  <p class="title-desc">2026 YEHON · DRAWING EXHIBITION</p>
+</section>
+
+<section class="countdowns">
+
+  <!-- 상단: 작품마감일 -->
+  <div class="cd-top">
+    <div class="cd-date-label-top">D — DAY</div>
+    <div class="cd-date-top">5월 27일 <span>수요일</span></div>
+    <div class="cd-numbers-top" id="cd-top-nums">
+      <div class="cd-unit-top"><span class="cd-num-top" id="t-d">--</span><span class="cd-label-top">days</span></div>
+      <span class="cd-sep-top">:</span>
+      <div class="cd-unit-top"><span class="cd-num-top" id="t-h">--</span><span class="cd-label-top">hrs</span></div>
+      <span class="cd-sep-top">:</span>
+      <div class="cd-unit-top"><span class="cd-num-top" id="t-m">--</span><span class="cd-label-top">min</span></div>
+      <span class="cd-sep-top">:</span>
+      <div class="cd-unit-top"><span class="cd-num-top" id="t-s">--</span><span class="cd-label-top">sec</span></div>
+    </div>
+    <div class="cd-finished-top" id="t-done" style="display:none;">작품 마감 완료</div>
+  </div>
+
+  <div class="cd-connector">
+    <div class="cd-connector-dot"></div>
+    <div class="cd-connector-line"></div>
+    <div class="cd-connector-dot"></div>
+  </div>
+
+  <!-- 하단: 예혼전 오픈식 -->
+  <div class="cd-bottom">
+    <div class="cd-event-label">Opening Ceremony</div>
+    <div class="cd-date-bottom">7월 14일 <span>화요일 · 예혼전 오픈식</span></div>
+    <div class="cd-numbers-bot" id="cd-bot-nums">
+      <div class="cd-unit-bot"><span class="cd-num-bot" id="b-d">--</span><span class="cd-label-bot">days</span></div>
+      <span class="cd-sep-bot">:</span>
+      <div class="cd-unit-bot"><span class="cd-num-bot" id="b-h">--</span><span class="cd-label-bot">hrs</span></div>
+      <span class="cd-sep-bot">:</span>
+      <div class="cd-unit-bot"><span class="cd-num-bot" id="b-m">--</span><span class="cd-label-bot">min</span></div>
+      <span class="cd-sep-bot">:</span>
+      <div class="cd-unit-bot"><span class="cd-num-bot" id="b-s">--</span><span class="cd-label-bot">sec</span></div>
+    </div>
+    <div class="cd-finished-bot" id="b-done" style="display:none;">예혼전 오픈식 — 2026. 7. 14</div>
+  </div>
+
+</section>
+
+<section class="schedule">
+  <div class="schedule-inner">
+    <div class="schedule-title">주요 일정 / Schedule</div>
+    <div class="schedule-list">
+
+      <div class="sch-item highlight-yellow">
+        <div class="sch-left">
+          <span class="sch-date">5. 28</span>
+          <span class="sch-dow">목요일</span>
+        </div>
+        <div class="sch-right">
+          <span class="sch-label">예혼전 · 드로잉전 작품촬영</span>
+        </div>
+      </div>
+
+      <div class="sch-item">
+        <div class="sch-left">
+          <span class="sch-date">7. 13</span>
+          <span class="sch-dow">월요일</span>
+        </div>
+        <div class="sch-right">
+          <span class="sch-label">예혼전 전시 DP</span>
+        </div>
+      </div>
+
+      <div class="sch-item highlight">
+        <div class="sch-left">
+          <span class="sch-date">7. 14</span>
+          <span class="sch-dow">화요일</span>
+        </div>
+        <div class="sch-right">
+          <span class="sch-label">예혼전 오픈식</span>
+        </div>
+      </div>
+
+      <div class="sch-item">
+        <div class="sch-left">
+          <span class="sch-date">7. 15</span>
+          <span class="sch-dow">수요일</span>
+        </div>
+        <div class="sch-right">
+          <span class="sch-label">예혼작품 워크숍</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-left">충남예술고등학교 미술과 예혼전</span>
+  <span class="footer-right">29기 예혼전 · 30기 드로잉전 · 2026</span>
+</footer>
+
+</div>
+
+<script>
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function calcCountdown(target){
+  const now = new Date();
+  const diff = target - now;
+  if(diff <= 0) return null;
+  const s = Math.floor(diff/1000)%60;
+  const m = Math.floor(diff/1000/60)%60;
+  const h = Math.floor(diff/1000/60/60)%24;
+  const d = Math.floor(diff/1000/60/60/24);
+  return {d,h,m,s};
+}
+
+const target1 = new Date('2026-05-27T00:00:00');
+const target2 = new Date('2026-07-14T00:00:00');
+
+function tick(){
+  const c1 = calcCountdown(target1);
+  if(c1){
+    document.getElementById('t-d').textContent = pad(c1.d);
+    document.getElementById('t-h').textContent = pad(c1.h);
+    document.getElementById('t-m').textContent = pad(c1.m);
+    document.getElementById('t-s').textContent = pad(c1.s);
+  } else {
+    document.getElementById('cd-top-nums').style.display='none';
+    document.getElementById('t-done').style.display='block';
+  }
+
+  const c2 = calcCountdown(target2);
+  if(c2){
+    document.getElementById('b-d').textContent = pad(c2.d);
+    document.getElementById('b-h').textContent = pad(c2.h);
+    document.getElementById('b-m').textContent = pad(c2.m);
+    document.getElementById('b-s').textContent = pad(c2.s);
+  } else {
+    document.getElementById('cd-bot-nums').style.display='none';
+    document.getElementById('b-done').style.display='block';
+  }
+}
+
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
